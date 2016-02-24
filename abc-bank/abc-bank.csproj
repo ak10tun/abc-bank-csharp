@@ -39,13 +39,48 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account.cs" />
+    <None Include="Baml\Account.cs1" />
+    <None Include="Baml\Bank.cs1" />
+    <None Include="Baml\Customer.cs1" />
+    <None Include="Baml\DateProvider.cs1" />
     <Compile Include="Bank.cs" />
-    <Compile Include="Customer.cs" />
-    <Compile Include="DateProvider.cs" />
+    <Compile Include="Common\BankingTimeZone.cs" />
+    <Compile Include="Common\PeriodUnit.cs" />
+    <Compile Include="Common\SimpleAccountType.cs" />
+    <Compile Include="Common\TransactionType.cs" />
+    <Compile Include="Helpers\DateTimeHelper.cs" />
+    <Compile Include="Helpers\ExceptionHelper.cs" />
+    <Compile Include="Helpers\ExtensionHelper.cs" />
+    <Compile Include="Helpers\InterestHelper.cs" />
+    <Compile Include="Helpers\ReportHelper.cs" />
+    <Compile Include="Helpers\ValidationHelper.cs" />
+    <Compile Include="Models\Def\ICustomer.cs" />
+    <Compile Include="Models\Impl\Customer.cs" />
+    <Compile Include="Models\Def\IAccruedInterest.cs" />
+    <Compile Include="Models\Impl\InvestmentPeriod.cs" />
+    <Compile Include="Models\Def\IPeriod.cs" />
+    <Compile Include="Models\Impl\MaxiSavingsAccount.cs" />
+    <Compile Include="Models\Impl\PeriodAccruedInterest.cs" />
+    <Compile Include="Services\Def\IAccountService.cs" />
+    <Compile Include="Services\Def\ICustomerService.cs" />
+    <Compile Include="Services\Def\IInterestProcessingService.cs" />
+    <Compile Include="Services\Def\IReportingService.cs" />
+    <Compile Include="Services\Impl\CustomerService.cs" />
+    <Compile Include="Services\Impl\InterestProcessingService.cs" />
+    <Compile Include="Services\Impl\ReportingService.cs" />
+    <Compile Include="Services\Def\ITransactionService.cs" />
+    <Compile Include="Models\Impl\BaseAccount.cs" />
+    <Compile Include="Models\Def\IConsumerAccount.cs" />
+    <Compile Include="Models\Def\ITransaction.cs" />
+    <Compile Include="Models\Impl\CheckingAccount.cs" />
+    <Compile Include="Models\Impl\SavingsAccount.cs" />
+    <Compile Include="Models\Impl\Transaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transaction.cs" />
+    <None Include="Baml\Transaction.cs1" />
+    <Compile Include="Services\Impl\ConsumerAccountService.cs" />
+    <Compile Include="Services\Impl\TransactionService.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
