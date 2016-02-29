@@ -36,6 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Telerik.JustMock, Version=2016.1.107.7, Culture=neutral, PublicKeyToken=721b6c5bc0326b3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\JustMock.2016.1.107.7\lib\Net35\Telerik.JustMock.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -54,9 +58,11 @@
   <ItemGroup>
     <None Include="Baml\BankTest.cs1" />
     <None Include="Baml\CustomerTest.cs1" />
+    <Compile Include="Bank\BankTests.cs" />
     <Compile Include="Helpers\HelpersTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Baml\TransactionTest.cs1" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\abc-bank\abc-bank.csproj">
@@ -64,9 +70,7 @@
       <Name>abc-bank</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

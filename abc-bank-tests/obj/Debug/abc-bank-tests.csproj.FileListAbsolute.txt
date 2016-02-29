@@ -12,3 +12,5 @@ C:\Users\artunkoktug\Source\Repos2\abc-bank-csharp\abc-bank-tests\bin\Debug\abc-
 C:\Users\artunkoktug\Source\Repos2\abc-bank-csharp\abc-bank-tests\obj\Debug\abc-bank-tests.csprojResolveAssemblyReference.cache
 C:\Users\artunkoktug\Source\Repos2\abc-bank-csharp\abc-bank-tests\obj\Debug\abc-bank-tests.dll
 C:\Users\artunkoktug\Source\Repos2\abc-bank-csharp\abc-bank-tests\obj\Debug\abc-bank-tests.pdb
+C:\Users\artunkoktug\Source\Repos2\abc-bank-csharp\abc-bank-tests\bin\Debug\Telerik.JustMock.dll
+C:\Users\artunkoktug\Source\Repos2\abc-bank-csharp\abc-bank-tests\bin\Debug\Telerik.JustMock.xml
