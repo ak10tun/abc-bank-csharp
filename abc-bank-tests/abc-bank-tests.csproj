@@ -56,8 +56,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <None Include="Accounts\OrderedAccountAccrualTests.orderedtest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Baml\BankTest.cs1" />
     <None Include="Baml\CustomerTest.cs1" />
+    <Compile Include="Accounts\AccountTests.cs" />
     <Compile Include="Bank\BankTests.cs" />
     <Compile Include="Helpers\HelpersTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

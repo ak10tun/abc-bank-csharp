@@ -17,6 +17,10 @@ namespace abc_bank
 
         public InterestBearingAccount(decimal initialDeposit, InterestCounpoundType compoundeType = InterestCounpoundType.Daily) : base(initialDeposit)
         {
+            MonetaryCycles = new CoreList<MonetaryCycle>();
+            this._CreateCycle(DateProvider.Now().Date);
+            UpdateCycle(this.Transactions[0]);
+
             RateLimits = new List<IRateLimit>();
             this.CompoundType = compoundeType;
             this.RegisterRateProviders();
@@ -44,8 +48,39 @@ namespace abc_bank
             return this.Type;
         }
 
+        public override decimal GetBalance()
+        {
+            return this.GetBalance(DateProvider.Now());
+        }
+
+        public override decimal GetBalance(DateTime date)
+        {
+            this.UpdateCycle(date);
+            return this.MonetaryCycles.Last().AvailableBalance;
+        }
 
         #region RateProcessing
+
+        public double GetEffectiveRate()
+        {
+            return this.GetEffectiveRate(DateProvider.Now());
+        }
+
+        public double GetEffectiveRate(DateTime date)
+        {
+            double? _rate = GetRate(date, this.GetBalance(date));
+
+            if (_rate.HasValue)
+            {
+                return _rate.Value;
+            }
+            else
+            {
+               return this.DefaultInterestRate;
+            }
+        }
+
+
 
         protected double? GetRate(DateTime date, decimal balance)
         {
@@ -123,7 +158,7 @@ namespace abc_bank
         {
             ReaderWriterLockSlim _slimLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
             _slimLock.EnterReadLock();
-            MonetaryCycle _cycle = this.MonetaryCycles.FirstOrDefault(x => x.Period.StartDateTime.Date == date);
+            MonetaryCycle _cycle = this.MonetaryCycles.FirstOrDefault(x => x.Period.StartDateTime.Date == date.Date);
             if(_slimLock.IsReadLockHeld)  _slimLock.ExitReadLock();
             return _cycle;
         }
@@ -135,7 +170,7 @@ namespace abc_bank
             _slimLock.TryEnterWriteLock(1000);
             try {
 
-                if (date < this.StartDate)
+                if (date.Date < this.StartDate.Date)
                 {
                     throw new Exception("Cannot add a cycle before account generation.");
                 }
@@ -145,9 +180,10 @@ namespace abc_bank
                 if (this.MonetaryCycles.Count == 0)
                 {
                     // Opening the account or another initializing event.
-                    _cycle = new MonetaryCycle(date);
+                    _cycle = new MonetaryCycle(date.Date);
                 }
-                else {
+                else
+                {
 
                     // if the cycle is already registered.
                     _cycle = this._FindCycle(date);
@@ -162,7 +198,8 @@ namespace abc_bank
 
                 }
 
-                this.AvailableBalance = _cycle.AvailableBalance;
+                this.MonetaryCycles.Add(_cycle);
+                //this.AvailableBalance = _cycle.AvailableBalance;
                 return _cycle;
             }
             catch { throw; }
@@ -172,12 +209,21 @@ namespace abc_bank
         // Cycles are updated when a balance query is set or a transaction is set.
         // Any type of account related activity (transaction, balance checking) will trigger cycle update.
 
-        protected void UpdateCycle(Transaction transaction)
-        {  
-             UpdateCycle(transaction.Date, transaction);
+        protected void UpdateCycle(ITransaction transaction)
+        {
+            MonetaryCycle _cycle = this._FindCycle(transaction.Date);
+
+            if (_cycle == null)
+            {
+                UpdateCycle(transaction.Date);
+                _cycle = this._FindCycle(transaction.Date);
+            }
+
+            _cycle.InTransactions.Add(transaction);
+            _cycle.AvailableBalance += transaction.Value;
         }
 
-        protected void UpdateCycle(DateTime date, ITransaction transaction = null)
+        protected void UpdateCycle(DateTime date)
         {
             ReaderWriterLockSlim _slimLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
@@ -185,32 +231,39 @@ namespace abc_bank
 
             try
             {
-                while (this._FindCycle(date) == null)
+                IMonetaryCycle _cycleOut = this._FindCycle(date);
+
+                if (_cycleOut == null)
                 {
-                    while (this.MonetaryCycles.Last().Period.StartDateTime.Date < date)
+                    while (this.MonetaryCycles.Last().Period.StartDateTime.Date < date.Date)
                     {
                         IMonetaryCycle _cycleIn = this._CreateCycle(this.MonetaryCycles.Last().Period.StartDateTime.AddDays(1));
-
+                        this._UpdateAccruedInterest(ref _cycleIn);
+                        /*
                         if (this.MonetaryCycles.Last().Period.StartDateTime.Date != date)
                         {
-                            double? _rateIn = GetRate(_cycleIn.Period.StartDateTime.Date, _cycleIn.AvailableBalance);
-                            if (_rateIn.HasValue) _cycleIn.AccruedInterest = this.GetCycleInterest(_cycleIn.AvailableBalance, _rateIn.Value);
+                            this._UpdateAccruedInterest(ref _cycleIn);
                         }
+                         this.AvailableBalance = this.MonetaryCycles.Last().AvailableBalance; 
+                        */
+
                     }
                 }
-                
-               
-                if (transaction != null)
+                else
                 {
-                    MonetaryCycle _cycle = this._FindCycle(date);
-                    _cycle.InTransactions.Add(transaction);
-                    _cycle.AvailableBalance += transaction.Value;
+                    this._UpdateAccruedInterest(ref _cycleOut);
                 }
-                
-                this.AvailableBalance = this.MonetaryCycles.Last().AvailableBalance;
             }
             catch { throw; }
             finally { if (_slimLock.IsWriteLockHeld) _slimLock.ExitWriteLock(); }
+        }
+
+        private void _UpdateAccruedInterest(ref IMonetaryCycle _cycle)
+        {
+            double? _rateIn = GetRate(_cycle.Period.StartDateTime.Date, _cycle.AvailableBalance);
+            _cycle.InterestRate = _rateIn.Value;
+            if (_rateIn.HasValue) _cycle.AccruedInterest = this.GetCycleInterest(_cycle.AvailableBalance, _rateIn.Value);
+            _cycle.ClosingBalance = _cycle.AccruedInterest + _cycle.AvailableBalance;
         }
 
         protected decimal GetCycleInterest(decimal balance, double rate)
@@ -236,6 +289,11 @@ namespace abc_bank
             _report += "Total " + this.MonetaryCycles.Last().AvailableBalance.ToDollars();
 
             return _report;
+        }
+
+        public override void Transactions_OnAdd(object sender, EventArgs e)
+        {
+            UpdateCycle((ITransaction)sender);
         }
 
         #endregion

@@ -104,8 +104,7 @@ namespace abc_bank
         [ContractArgumentValidator]
         public static void SufficientFunds(decimal amount, decimal balance, string parameterName)
         {
-            if (balance < amount) throw new ArgumentNullException(parameterName,
-                                                                  "Insufficient funds to withdraw.");
+            if (balance < amount) throw new InsufficientFundsException("Insufficient funds to withdraw.");
             Contract.EndContractBlock();
         }
 

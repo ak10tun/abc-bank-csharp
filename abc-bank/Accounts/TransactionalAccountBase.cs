@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 
 namespace abc_bank
 {
-    public abstract class TransactionalAccountBase: AccountBase, IDepositable, IWithdrawable, ITransferable, IDisposable
+    public abstract class TransactionalAccountBase : AccountBase, IDepositable, IWithdrawable, ITransferable, IDisposable
     {
         public CoreList<ITransaction> Transactions { get; protected set; }
 
         public TransactionalAccountBase(decimal initialDeposit) : base(initialDeposit)
         {
             this.Transactions = new CoreList<ITransaction>();
+            this.Deposit(initialDeposit);
             this.Transactions.OnAdd += Transactions_OnAdd;
         }
 
-        private void Transactions_OnAdd(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
+        public abstract decimal GetBalance();
+        public abstract decimal GetBalance(DateTime date);
+        public abstract void Transactions_OnAdd(object sender, EventArgs e);
+       
         public void Deposit(decimal amount)
         {
             this.Deposit(amount, DateProvider.Now());
@@ -63,7 +64,10 @@ namespace abc_bank
         {
             ValidationHelper.NegativeTransactionValue(amount, "amount");
             ValidationHelper.ZeroTransactionValue(amount, "amount");
-            ValidationHelper.SufficientFunds(amount, this.AvailableBalance, "amount");
+
+            decimal _balance = this.GetBalance();
+
+            ValidationHelper.SufficientFunds(amount, _balance, "amount");
 
             this.Transactions.Add(new Transaction(amount * -1, TransactionType.Withdraw, date));
         }

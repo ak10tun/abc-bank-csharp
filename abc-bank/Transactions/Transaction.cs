@@ -19,7 +19,7 @@ namespace abc_bank
 
         public Transaction(decimal amount, TransactionType type, DateTime date)
         {
-            ValidationHelper.NegativeNumeric<decimal>(amount, "amount");
+            //ValidationHelper.NegativeNumeric<decimal>(amount, "amount");
             this.Value = amount;
             this.Date = date;
             this.Type = type;

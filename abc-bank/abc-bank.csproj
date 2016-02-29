@@ -48,7 +48,7 @@
     <Compile Include="Bank\IBank.cs" />
     <Compile Include="Bank\IBankManager.cs" />
     <Compile Include="Customers\Customer.cs" />
-    <Compile Include="Cycles\ICustomer.cs" />
+    <Compile Include="Customers\ICustomer.cs" />
     <Compile Include="Cycles\_IMonetaryCycle.cs" />
     <Compile Include="Reports\IStatementViewable.cs" />
     <Compile Include="Reports\lInterestPaidViewable.cs" />

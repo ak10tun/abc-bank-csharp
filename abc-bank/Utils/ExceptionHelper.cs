@@ -79,4 +79,19 @@ namespace abc_bank
         {
         }
     }
+
+    /// <summary>
+    /// If a date is greater than an earlier date.
+    /// </summary>
+    public class InsufficientFundsException : Exception
+    {
+        public InsufficientFundsException()
+        {
+        }
+        public InsufficientFundsException(string message)
+            : base(message)
+        {
+        }
+    }
+
 }

@@ -12,7 +12,7 @@ namespace abc_bank
         IList<IRateLimit> RateLimits { get; }
         DateTime StartDate { get;}
         double DefaultInterestRate { get; }
-        decimal AvailableBalance { get; }
+        //decimal AvailableBalance { get; }
         InterestAccountType Type { get; }
         string TypeName { get; }
         CoreList<MonetaryCycle> MonetaryCycles { get; }
@@ -20,6 +20,18 @@ namespace abc_bank
         string GetStatement();
         decimal InterestEarned();
         decimal InterestEarned(DateTime date);
+        decimal GetBalance();
+        decimal GetBalance(DateTime date);
+        double GetEffectiveRate();
+        double GetEffectiveRate(DateTime date);
+        CoreList<ITransaction> Transactions { get; }
+        void Deposit(decimal amount);
+        void Deposit(decimal amount, DateTime date);
+        void Dispose();
+        void Transfer(IInterestAccount receivingAccount, decimal amount);
+        void Transfer(IInterestAccount receivingAccount, decimal amount, DateTime date);
+        void Withdraw(decimal amount);
+        void Withdraw(decimal amount, DateTime date);
 
     }
 }

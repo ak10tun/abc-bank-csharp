@@ -45,7 +45,7 @@ namespace abc_bank
 
             if (null != OnAdd)
             {
-                OnAdd(this, null);
+                OnAdd(item, null);
             }
             if (_slimLock.IsWriteLockHeld) _slimLock.ExitWriteLock();
         }
