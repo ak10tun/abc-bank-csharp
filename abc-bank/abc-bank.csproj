@@ -39,8 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accounts\. InterestBearingAccount.cs" />
-    <Compile Include="Accounts\. TransactionalAccountBase.cs" />
+    <Compile Include="Accounts\InterestBearingAccount.cs" />
+    <Compile Include="Accounts\TransactionalAccountBase.cs" />
     <Compile Include="Accounts\CheckingAccount.cs" />
     <Compile Include="Accounts\MaxiSavingsAccount.cs" />
     <Compile Include="Accounts\_IInterestBearable.cs" />
@@ -48,7 +48,7 @@
     <Compile Include="Bank\IBank.cs" />
     <Compile Include="Bank\IBankManager.cs" />
     <Compile Include="Customers\Customer.cs" />
-    <Compile Include="Customers\ICustomer.cs" />
+    <Compile Include="Cycles\ICustomer.cs" />
     <Compile Include="Cycles\_IMonetaryCycle.cs" />
     <Compile Include="Reports\IStatementViewable.cs" />
     <Compile Include="Reports\lInterestPaidViewable.cs" />
@@ -56,7 +56,7 @@
     <Compile Include="Structures\CoreSet.cs" />
     <Compile Include="RateLimits\_IRateLimit.cs" />
     <Compile Include="Bank\Bank.cs" />
-    <Compile Include="Accounts\. AccountBase.cs" />
+    <Compile Include="Accounts\AccountBase.cs" />
     <Compile Include="Accounts\_IInterestAccount.cs" />
     <Compile Include="Common\__InterestCompundType.cs" />
     <Compile Include="Common\__BankingTimeZone.cs" />
