@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<OrderedTest name="OrderedTest1" storage="c:\users\artunkoktug\source\repos2\abc-bank-csharp\abc-bank-tests\accounts\orderedtest1.orderedtest" id="25acbb06-850b-4e10-9585-783c47aa5d8e" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+<OrderedTest name="OrderedAccountAccrualTests" storage="c:\users\artunkoktug\source\repos2\abc-bank-csharp\abc-bank-tests\accounts\orderedaccountaccrualtests.orderedtest" id="25acbb06-850b-4e10-9585-783c47aa5d8e" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <TestLinks>
     <TestLink id="d1d71313-07ed-182b-180a-17009484dfbe" name="Accounts_AreTransactionsRegistered" storage="..\bin\debug\abc-bank-tests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <TestLink id="d1d71313-07ed-182b-180a-17009484dfbe" name="Accounts_AreTransactionsRegistered" storage="..\bin\debug\abc-bank-tests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="1270b2c5-edf4-47c9-98c8-e3926d10b359" name="Accounts_AreInterestsAccruing" storage="..\bin\debug\abc-bank-tests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </TestLinks>
 </OrderedTest>

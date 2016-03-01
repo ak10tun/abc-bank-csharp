@@ -52,7 +52,7 @@ namespace abc_bank
             ValidationHelper.NegativeTransactionValue(amount, "amount");
             ValidationHelper.ZeroTransactionValue(amount, "amount");
             this.Transactions.Add(new Transaction(amount * -1, TransactionType.TransferOut, date));
-            this.Transactions.Add(new Transaction(amount, TransactionType.TransferIn, date));
+            receivingAccount.Transactions.Add(new Transaction(amount, TransactionType.TransferIn, date));
         }
 
         public void Withdraw(decimal amount)

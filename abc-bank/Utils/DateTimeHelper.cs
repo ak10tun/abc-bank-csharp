@@ -32,6 +32,13 @@ namespace abc_bank
             return Now().AddDays(duration);
         }
         
+        public static int RollingYearDayCount(DateTime date)
+        { 
+            var _rolling1YearDate = new DateTime(date.Year +1 , date.Month, date.Day);
+            int diff = (_rolling1YearDate - date).Days;
+
+            return diff;
+        }
 
         public static double Duration(DateTime startDate, DateTime endDate, PeriodUnit unit = PeriodUnit.Day)
         {

@@ -15,15 +15,15 @@ namespace abc_bank
         protected InterestCounpoundType CompoundType { get; }
 
 
-        public InterestBearingAccount(decimal initialDeposit, InterestCounpoundType compoundeType = InterestCounpoundType.Daily) : base(initialDeposit)
+        public InterestBearingAccount(decimal initialDeposit, InterestCounpoundType compoundType = InterestCounpoundType.Daily) : base(initialDeposit)
         {
             MonetaryCycles = new CoreList<MonetaryCycle>();
             this._CreateCycle(DateProvider.Now().Date);
-            UpdateCycle(this.Transactions[0]);
 
             RateLimits = new List<IRateLimit>();
-            this.CompoundType = compoundeType;
+            this.CompoundType = compoundType;
             this.RegisterRateProviders();
+            this.Transactions_OnAdd(this.Transactions[0], null);
         }
 
         protected abstract void RegisterRateProviders();
@@ -211,16 +211,19 @@ namespace abc_bank
 
         protected void UpdateCycle(ITransaction transaction)
         {
-            MonetaryCycle _cycle = this._FindCycle(transaction.Date);
+            return;
+           // this._UpdateAccruedInterest(ref _cycle);
+        }
 
-            if (_cycle == null)
+        private IMonetaryCycle _GetCycle (DateTime date)
+        {
+            IMonetaryCycle _cycle = this._FindCycle(date);
+            if (_cycle== null)
             {
-                UpdateCycle(transaction.Date);
-                _cycle = this._FindCycle(transaction.Date);
+                _cycle = this._CreateCycle(date);
             }
 
-            _cycle.InTransactions.Add(transaction);
-            _cycle.AvailableBalance += transaction.Value;
+            return _cycle;
         }
 
         protected void UpdateCycle(DateTime date)
@@ -231,29 +234,23 @@ namespace abc_bank
 
             try
             {
-                IMonetaryCycle _cycleOut = this._FindCycle(date);
 
-                if (_cycleOut == null)
-                {
-                    while (this.MonetaryCycles.Last().Period.StartDateTime.Date < date.Date)
-                    {
-                        IMonetaryCycle _cycleIn = this._CreateCycle(this.MonetaryCycles.Last().Period.StartDateTime.AddDays(1));
-                        this._UpdateAccruedInterest(ref _cycleIn);
-                        /*
-                        if (this.MonetaryCycles.Last().Period.StartDateTime.Date != date)
-                        {
-                            this._UpdateAccruedInterest(ref _cycleIn);
-                        }
-                         this.AvailableBalance = this.MonetaryCycles.Last().AvailableBalance; 
-                        */
+                DateTime _dateChecked = this.MonetaryCycles.Last().Period.StartDateTime.Date;
 
-                    }
-                }
-                else
+                while (_dateChecked < date.Date)
                 {
+
+                    IMonetaryCycle _cycleOut = this._GetCycle(_dateChecked);
                     this._UpdateAccruedInterest(ref _cycleOut);
+                    _dateChecked = _dateChecked.AddDays(1);
+
                 }
+
+                 this._GetCycle(date);
+
             }
+
+
             catch { throw; }
             finally { if (_slimLock.IsWriteLockHeld) _slimLock.ExitWriteLock(); }
         }
@@ -264,6 +261,7 @@ namespace abc_bank
             _cycle.InterestRate = _rateIn.Value;
             if (_rateIn.HasValue) _cycle.AccruedInterest = this.GetCycleInterest(_cycle.AvailableBalance, _rateIn.Value);
             _cycle.ClosingBalance = _cycle.AccruedInterest + _cycle.AvailableBalance;
+
         }
 
         protected decimal GetCycleInterest(decimal balance, double rate)
@@ -293,7 +291,19 @@ namespace abc_bank
 
         public override void Transactions_OnAdd(object sender, EventArgs e)
         {
-            UpdateCycle((ITransaction)sender);
+            ITransaction _transaction = (ITransaction)sender;
+            IMonetaryCycle _cycle = this._FindCycle(_transaction.Date);
+
+            if (_cycle == null)
+            {
+                UpdateCycle(_transaction.Date);
+                _cycle = this._FindCycle(_transaction.Date);
+            }
+
+            _cycle.InTransactions.Add(_transaction);
+            _cycle.AvailableBalance += _transaction.Value;
+
+
         }
 
         #endregion

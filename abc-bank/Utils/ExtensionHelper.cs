@@ -59,7 +59,7 @@ namespace abc_bank
 
         public static string ToDollars(this decimal d)
         {
-            return String.Format("$%,.2f", Math.Abs(d));
+            return String.Format("{0:C}", d);
         }
     }
 }
